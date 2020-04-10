@@ -1,0 +1,21 @@
+<div class="left-block">
+  <h3 class="title">Left block</h3>
+
+  <div class="content">
+    <ul>
+      <li *ngFor="let tree of tree$ | async">
+        {{tree.label}}
+        <ul>
+          <li *ngFor="let subTree of tree.value">
+            {{subTree.label}}
+            <ul>
+              <li *ngFor="let subSubTree of subTree.value">
+                {{subSubTree.label}}
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
