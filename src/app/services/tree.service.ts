@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import {Observable, of} from 'rxjs';
-import {ITree} from '../../models';
-import {treeData} from '../../content';
+import {ITree} from '../models';
+import {treeData} from '../content';
 
 @Injectable()
-export class MainService {
+export class TreeService {
 
   constructor() { }
 

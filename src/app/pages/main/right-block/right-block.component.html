@@ -2,6 +2,11 @@
   <h3 class="title">Right block</h3>
 
   <div class="content">
-    content
+    <ul>
+      <li *ngFor="let coordinate of coordinates; let i = index">
+        {{coordinate.lat}} - {{coordinate.lng}}
+        <span class="remove-icon" (click)="deleteCoordinate(i)">X</span>
+      </li>
+    </ul>
   </div>
 </div>

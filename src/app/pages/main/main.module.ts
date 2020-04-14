@@ -5,19 +5,25 @@ import { RouterModule } from '@angular/router';
 
 import { MAIN_ROUTES } from './main-routes';
 import { MapComponent } from './map/map.component';
-import { LeftBlockComponent } from './left-block/left-block.component';
+import { TreeComponent } from './tree/tree.component';
 import { RightBlockComponent } from './right-block/right-block.component';
-import {MainService} from './main.service';
+import {MapService, TreeService} from '../../services';
 
 
 @NgModule({
-  declarations: [MainComponent, MapComponent, LeftBlockComponent, RightBlockComponent],
+  declarations: [
+    MainComponent,
+    MapComponent,
+    TreeComponent,
+    RightBlockComponent
+  ],
   imports: [
     CommonModule,
     RouterModule.forChild(MAIN_ROUTES)
   ],
   providers: [
-    MainService
+    TreeService,
+    MapService
   ]
 })
 export class MainModule { }
