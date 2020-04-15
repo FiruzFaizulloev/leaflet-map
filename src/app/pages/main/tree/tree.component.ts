@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {Observable} from 'rxjs';
-import { ITree } from '../../../models';
+import {ILatLng, ITree} from '../../../models';
 import {MapService, TreeService} from '../../../services';
 
 @Component({
@@ -10,7 +10,7 @@ import {MapService, TreeService} from '../../../services';
 })
 export class TreeComponent implements OnInit {
 
-  tree$: Observable<ITree[]>;
+  trees: ITree[];
 
   constructor(
     private _treeService: TreeService,
@@ -19,22 +19,23 @@ export class TreeComponent implements OnInit {
 
   ngOnInit(): void {
     this._getTree();
+    this._getDeletedCoordinates();
   }
 
-  onTreeClick(e, tree: any, i) {
+  onTreeClick(e, tree: any) {
     e.stopPropagation();
     const coordinates = this._getCoordinates(tree);
     tree.selected = true;
-    console.log(i);
     this._mapService.markers$.next(coordinates);
   }
 
   private _getTree() {
-    this.tree$ = this._treeService.getTree();
+    this._treeService.getTree()
+      .subscribe((res: ITree[]) => this.trees = res);
   }
 
-  private _getCoordinates(tree: ITree): number[][] {
-    const markers = [];
+  private _getCoordinates(tree: ITree): ILatLng[] {
+    const markers: ILatLng[] = [];
 
     const getMarkers = (coordinates) => {
       coordinates.value.forEach(item => {
@@ -48,5 +49,29 @@ export class TreeComponent implements OnInit {
     getMarkers(tree);
 
     return markers;
+  }
+
+  private _getDeletedCoordinates() {
+    this._mapService.deletedCoordinate$
+      .subscribe((res: ILatLng) => this._enableMenu(res));
+  }
+
+  private _enableMenu(coordinate: ILatLng) {
+    const findCoordinate = (coordinates: any) => {
+      coordinates.value.forEach((item: any) => {
+        if (item.hasOwnProperty('value')) {
+          return findCoordinate(item);
+        }
+        const checkCoordinate = coordinates.value.some((c: ILatLng) => {
+          return c.lat === coordinate.lat && c.lng === coordinate.lng;
+        });
+
+        if (!checkCoordinate) {
+          coordinates.selected = false;
+        }
+      });
+    };
+
+    this.trees.forEach(tree => findCoordinate(tree));
   }
 }

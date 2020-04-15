@@ -3,6 +3,7 @@ import * as L from 'leaflet';
 import {LatLngExpression, LayerGroup, Marker} from 'leaflet';
 import {MapService} from '../../../services';
 import {LatLng} from 'leaflet';
+import {ILatLng} from '../../../models';
 
 
 @Component({
@@ -41,8 +42,8 @@ export class MapComponent implements OnInit {
 
   private _setMarkers(markers: any) {
     this._layerGroup.clearLayers();
-    markers.forEach((item: LatLngExpression) => {
-      const marker = L.marker(item);
+    markers.forEach((item: ILatLng) => {
+      const marker = L.marker([item.lat, item.lng]);
       marker.on('mouseover', () => this._onMarkerHover(marker));
       marker.addTo(this._layerGroup);
     });

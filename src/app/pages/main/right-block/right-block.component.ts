@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {MapService} from '../../../services';
-import {Observable} from 'rxjs';
-import {LatLng} from 'leaflet';
+import {ILatLng} from '../../../models';
 
 @Component({
   selector: 'app-right-block',
@@ -10,7 +9,7 @@ import {LatLng} from 'leaflet';
 })
 export class RightBlockComponent implements OnInit {
 
-  coordinates: LatLng[];
+  coordinates: ILatLng[];
 
   constructor(
     private _mapService: MapService
@@ -20,12 +19,13 @@ export class RightBlockComponent implements OnInit {
     this._getCoordinates();
   }
 
-  deleteCoordinate(i: number) {
-    this.coordinates.splice(i, 1);
+  deleteCoordinate(coordinate: ILatLng, index: number) {
+    this._mapService.deletedCoordinate$.next(coordinate);
+    this.coordinates.splice(index, 1);
   }
 
   private _getCoordinates() {
     this._mapService.deletedMarkers$.
-      subscribe((res: LatLng[]) => this.coordinates = res);
+      subscribe((res: ILatLng[]) => this.coordinates = res);
   }
 }
