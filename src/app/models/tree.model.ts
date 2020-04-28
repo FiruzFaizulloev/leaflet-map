@@ -7,4 +7,5 @@ export interface ITree {
 export interface ILatLng {
   lat: number;
   lng: number;
+  selected?: boolean;
 }

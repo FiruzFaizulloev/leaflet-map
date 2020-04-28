@@ -1,16 +1,14 @@
 <div class="left-block">
-  <h3 class="title">Left block</h3>
+  <h3 class="title">Tree</h3>
 
   <div class="content">
     <ul>
       <li *ngFor="let tree of trees"
-          (click)="onTreeClick($event, tree)"
-          [class.selected]="tree.selected">
+          (click)="onTreeClick($event, tree)">
         {{tree.label}}
         <ul>
           <li *ngFor="let subTree of tree.value"
-              (click)="onTreeClick($event, subTree)"
-              [class.selected]="subTree.selected">
+              (click)="onTreeClick($event, subTree)">
             {{subTree.label}}
             <ul>
               <li class="coordinates"

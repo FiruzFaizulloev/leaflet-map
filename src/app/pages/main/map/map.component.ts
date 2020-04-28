@@ -1,9 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import * as L from 'leaflet';
 import {LatLngExpression, LayerGroup, Marker} from 'leaflet';
 import {MapService} from '../../../services';
 import {LatLng} from 'leaflet';
 import {ILatLng} from '../../../models';
+import {Subject} from 'rxjs';
+import {takeUntil} from 'rxjs/operators';
 
 
 @Component({
@@ -11,13 +13,14 @@ import {ILatLng} from '../../../models';
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss']
 })
-export class MapComponent implements OnInit {
+export class MapComponent implements OnInit, OnDestroy {
 
   map: any;
   private _layerGroup: LayerGroup;
   private _deletedMarkers: LatLng[] = [];
   private _moskowLatLng: LatLngExpression = [55.751244, 37.618423];
   private _zoom = 8;
+  private _destroy$ = new Subject();
 
   constructor(
     private _mapService: MapService
@@ -26,6 +29,11 @@ export class MapComponent implements OnInit {
   ngOnInit(): void {
     this._initMap();
     this._getMarkers();
+  }
+
+  ngOnDestroy(): void {
+    this._destroy$.next(true);
+    this._destroy$.unsubscribe();
   }
 
   private _initMap() {
@@ -37,6 +45,7 @@ export class MapComponent implements OnInit {
 
   private _getMarkers() {
     this._mapService.markers$
+      .pipe(takeUntil(this._destroy$))
       .subscribe((markers: any) => this._setMarkers(markers));
   }
 
